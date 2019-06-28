@@ -446,8 +446,11 @@ function dispatch(request)
 				return
 			end
 
+			-- remove the trailing slash from the url path.  At
+			-- least one browser (netsurf) doesn't like this.
+			local _path = string.gsub(build_url(), '/$', '')
 			http.header("Set-Cookie", 'sysauth=%s; path=%s; HttpOnly%s' %{
-				sid, build_url(), http.getenv("HTTPS") == "on" and "; secure" or ""
+				sid, _path, http.getenv("HTTPS") == "on" and "; secure" or ""
 			})
 			http.redirect(build_url(unpack(ctx.requestpath)))
 		end
